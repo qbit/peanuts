@@ -1,6 +1,34 @@
 # peanuts
 
+[![GoDoc](https://godoc.org/github.com/yukkurisinai/peanuts?status.png)](https://godoc.org/github.com/yukkurisinai/peanuts)
+
 A Golang client library for the pnut.io v0 API
+
+## Installation
+
+```sh
+go get github.com/yukkurisinai/peanuts
+```
+
+## Usage
+
+```go
+package main
+
+import (
+  "peanuts"
+  "fmt"
+)
+
+func main() {
+  client := peanuts.NewClient("CLIENT_TOKEN", "CLIENT_SECRET")
+  client.SetAccessToken("ACCESS_TOKEN")
+  v := url.Values{}
+  v.Set("text", "Hello pnut.io")
+  result, err := client.Post(v)
+  ...
+}
+```
 
 ## Licence
 
