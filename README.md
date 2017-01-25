@@ -4,6 +4,8 @@
 
 A Golang client library for the pnut.io v0 API
 
+Work in progress !
+
 ## Installation
 
 ```sh
