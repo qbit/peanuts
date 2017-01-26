@@ -41,9 +41,8 @@ type response struct {
 
 func (c *Client) initialize() {
 	c.Api = *&Api{
-		accessToken:          "",
-		ReturnRateLimitError: false,
-		HttpClient:           http.DefaultClient,
+		accessToken: "",
+		HttpClient:  http.DefaultClient,
 	}
 }
 

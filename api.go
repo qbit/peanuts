@@ -17,7 +17,6 @@ const (
 )
 
 type Api struct {
-	accessToken          string
-	ReturnRateLimitError bool
-	HttpClient           *http.Client
+	accessToken string
+	HttpClient  *http.Client
 }
