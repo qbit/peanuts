@@ -66,8 +66,15 @@ func (c *Client) SetAccessToken(accessToken string) {
 	c.Api.accessToken = accessToken
 }
 
+type StreamMeta struct {
+	More  bool   `json:"more"`
+	MaxId string `json:"max_id"`
+	MinId string `json:"min_id"`
+}
+
 type Meta struct {
-	Code         int    `json:"int"`
+	*StreamMeta
+	Code         int    `json:"code"`
 	Error        string `json:"error"`
 	ErrorMessage string `json:"error_message"`
 }

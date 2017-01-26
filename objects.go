@@ -76,10 +76,13 @@ type Post struct {
 	Source        Source        `json:"source"`
 	User          User          `json:"user"`
 	ThreadId      string        `json:"thread_id"`
+	IsRevised     bool          `json:"is_revised"`
+	Revision      string        `json:"revision"`
 	ReplyTo       string        `json:"reply_to"`
 	RepostOf      string        `json:"repost_of"`
 	Counts        CountsOfPost  `json:"counts"`
 	Content       ContentOfPost `json:"content"`
 	YouBookmarked bool          `json:"you_bookmarked"`
 	YouReposted   bool          `json:"you_reposted"`
+	PaginationId  string        `json:"pagination_id"`
 }
