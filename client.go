@@ -11,10 +11,11 @@ import (
 )
 
 type Client struct {
-	clientId     string
-	clientSecret string
-	queryQueue   chan query
-	Api          Api
+	clientId            string
+	clientSecret        string
+	passwordGrantSecret string
+	queryQueue          chan query
+	Api                 Api
 }
 
 func NewClient(clientId string, clientSecret string) *Client {
@@ -46,10 +47,21 @@ func (c *Client) initialize() {
 	}
 }
 
+// Generate authorization url
+// https://pnut.io/docs/authentication/web-flows
 func (c *Client) AuthURL(redirectURI string, scope []string, responseType string) string {
 	return AUTHENTICATE_URL + "?client_id=" + c.clientId + "&redirect_uri=" + redirectURI + "&scope=" + strings.Join(scope, "%20") + "&response_type=" + responseType
 }
 
+// Set password grant secret
+// https://pnut.io/docs/authentication/password-flow
+func (c *Client) SetPasswordGrantSecret(passwordGrantSecret string) {
+	c.passwordGrantSecret = passwordGrantSecret
+}
+
+// Set access token
+// https://pnut.io/docs/authentication/web-flows
+// https://pnut.io/docs/authentication/password-flow
 func (c *Client) SetAccessToken(accessToken string) {
 	c.Api.accessToken = accessToken
 }
