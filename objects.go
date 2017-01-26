@@ -79,7 +79,7 @@ type Post struct {
 	IsRevised     bool          `json:"is_revised"`
 	Revision      string        `json:"revision"`
 	ReplyTo       string        `json:"reply_to"`
-	RepostOf      string        `json:"repost_of"`
+	RepostOf      *Post         `json:"repost_of"`
 	Counts        CountsOfPost  `json:"counts"`
 	Content       ContentOfPost `json:"content"`
 	YouBookmarked bool          `json:"you_bookmarked"`
