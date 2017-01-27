@@ -16,6 +16,11 @@ type PostResult struct {
 	Data Post `json:"data"`
 }
 
+type ActionsResult struct {
+	*CommonResponse
+	Data []Action `json:"data"`
+}
+
 // Get post from Id
 // https://pnut.io/docs/resources/posts/lookup#get-posts-id
 func (c *Client) GetPost(id string) (result PostResult, err error) {
@@ -127,5 +132,60 @@ func (c *Client) TagStream(tag string, count ...int) (result PostsResult, err er
 	}
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: STREAM_TAG_BASE_URL + "/" + tag + param, form: nil, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Retrieve posts within thread
+// https://pnut.io/docs/resources/posts/threads#get-posts-id-thread
+func (c *Client) Thread(id string) (result PostsResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/thread", form: nil, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Repost post
+// https://pnut.io/docs/resources/posts/reposts#put-posts-id-repost
+func (c *Client) Repost(id string) (result PostResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/repost", form: nil, data: &result, method: "PUT", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Delete repost
+// https://pnut.io/docs/resources/posts/reposts#delete-posts-id-repost
+func (c *Client) UnRepost(id string) (result PostResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/repost", form: nil, data: &result, method: "DELETE", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Bookmark post
+// https://pnut.io/docs/resources/posts/bookmarks#put-posts-id-bookmark
+func (c *Client) Bookmark(id string) (result PostResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/bookmark", form: nil, data: &result, method: "PUT", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Delete bookmark
+// https://pnut.io/docs/resources/posts/bookmarks#put-posts-id-bookmark
+func (c *Client) UnBookmark(id string) (result PostResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/bookmark", form: nil, data: &result, method: "DELETE", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get actions
+// https://pnut.io/docs/resources/posts/actions#get-posts-id-actions
+func (c *Client) Actions(id string, v ...url.Values) (result ActionsResult, err error) {
+	param := ""
+	if len(v) > 0 {
+		param = v[0].Encode()
+	}
+	if param != "" {
+		param = "?" + param
+	}
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: POST_API + "/" + id + "/actions" + param, form: nil, data: &result, method: "GET", response_ch: response_ch}
 	return result, (<-response_ch).err
 }

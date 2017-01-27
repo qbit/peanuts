@@ -86,3 +86,10 @@ type Post struct {
 	YouReposted   bool          `json:"you_reposted"`
 	PaginationId  string        `json:"pagination_id"`
 }
+
+type Action struct {
+	PaginationId string `json:"pagination_id"`
+	EventDate    string `json:"event_date"`
+	Action       string `json:"action"`
+	Users        []User `json:"users"`
+}
