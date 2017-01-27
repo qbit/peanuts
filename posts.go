@@ -6,14 +6,14 @@ import (
 	"strings"
 )
 
-type PostsResult struct {
-	*CommonResponse
-	Data []Post `json:"data"`
-}
-
 type PostResult struct {
 	*CommonResponse
 	Data Post `json:"data"`
+}
+
+type PostsResult struct {
+	*CommonResponse
+	Data []Post `json:"data"`
 }
 
 type ActionsResult struct {
@@ -21,7 +21,7 @@ type ActionsResult struct {
 	Data []Action `json:"data"`
 }
 
-// Get post from Id
+// Get post
 // https://pnut.io/docs/resources/posts/lookup#get-posts-id
 func (c *Client) GetPost(id string) (result PostResult, err error) {
 	response_ch := make(chan response)
@@ -29,7 +29,7 @@ func (c *Client) GetPost(id string) (result PostResult, err error) {
 	return result, (<-response_ch).err
 }
 
-// Get posts from Ids
+// Get posts
 // https://pnut.io/docs/resources/posts/lookup#get-posts
 func (c *Client) GetPosts(ids []string) (result PostsResult, err error) {
 	v := url.Values{}
@@ -55,9 +55,9 @@ func (c *Client) Post(v url.Values) (result PostResult, err error) {
 	return result, (<-response_ch).err
 }
 
-// Revice post
+// Revise post
 // https://pnut.io/docs/resources/posts/lifecycle#put-posts-id
-func (c *Client) RevicePost(id string, v url.Values) (result PostResult, err error) {
+func (c *Client) RevisePost(id string, v url.Values) (result PostResult, err error) {
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: POST_API + "/" + id, form: v, data: &result, method: "PUT", response_ch: response_ch}
 	return result, (<-response_ch).err
