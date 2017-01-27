@@ -137,7 +137,7 @@ func (c *Client) TagStream(tag string, count ...int) (result PostsResult, err er
 
 // Retrieve posts within thread
 // https://pnut.io/docs/resources/posts/threads#get-posts-id-thread
-func (c *Client) Thread(id string) (result PostsResult, err error) {
+func (c *Client) GetThread(id string) (result PostsResult, err error) {
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: POST_API + "/" + id + "/thread", form: nil, data: &result, method: "GET", response_ch: response_ch}
 	return result, (<-response_ch).err
@@ -177,7 +177,7 @@ func (c *Client) UnBookmark(id string) (result PostResult, err error) {
 
 // Get actions
 // https://pnut.io/docs/resources/posts/actions#get-posts-id-actions
-func (c *Client) Actions(id string, v ...url.Values) (result ActionsResult, err error) {
+func (c *Client) GetActions(id string, v ...url.Values) (result ActionsResult, err error) {
 	param := ""
 	if len(v) > 0 {
 		param = v[0].Encode()
