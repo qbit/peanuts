@@ -173,3 +173,7 @@ func (c *Client) throttledQuery() {
 		response_ch <- response{data, err}
 	}
 }
+
+func notSupported() error {
+	return fmt.Errorf("not supported")
+}

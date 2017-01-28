@@ -1,7 +1,6 @@
 package peanuts
 
 import (
-	"fmt"
 	"net/url"
 	"strconv"
 	"strings"
@@ -103,14 +102,14 @@ func (c *Client) GetAvatarURL(id string, v ...url.Values) (url string, err error
 // this func will be updated
 // https://pnut.io/docs/resources/users/profile#post-users-me-avatar
 func (c *Client) UploadAvatar(avatar []byte) (result UserResult, err error) {
-	return result, fmt.Errorf("not supported")
+	return result, notSupported()
 }
 
 // Upload avatar from url
 // this func will be updated
 // https://pnut.io/docs/resources/users/profile#post-users-me-avatar
 func (c *Client) UploadAvatarFromURL(url string) (result UserResult, err error) {
-	return result, fmt.Errorf("not supported")
+	return result, notSupported()
 }
 
 // Get avatar url
@@ -133,14 +132,14 @@ func (c *Client) GetCoverURL(id string, v ...url.Values) (url string, err error)
 // this func will be updated
 // https://pnut.io/docs/resources/users/profile#post-users-me-cover
 func (c *Client) UploadCover(cover []byte) (result UserResult, err error) {
-	return result, fmt.Errorf("not supported")
+	return result, notSupported()
 }
 
 // Upload cover from url
 // this func will be updated
 // https://pnut.io/docs/resources/users/profile#post-users-me-cover
 func (c *Client) UploadCoverFromURL(url string) (result UserResult, err error) {
-	return result, fmt.Errorf("not supported")
+	return result, notSupported()
 }
 
 // Get following
