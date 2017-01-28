@@ -14,6 +14,8 @@ const (
 	STREAM_UNIFIED_API     = STREAM_BASE_URL + "/unified"
 	STREAM_GLOBAL_API      = STREAM_BASE_URL + "/global"
 	STREAM_TAG_BASE_URL    = POST_API + "/" + "tag"
+	USER_API               = API_BASE_URL + "users"
+	USER_ME_API            = USER_API + "/me"
 )
 
 type Api struct {

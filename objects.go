@@ -93,3 +93,9 @@ type Action struct {
 	Action       string `json:"action"`
 	Users        []User `json:"users"`
 }
+
+type Presence struct {
+	Id         string `json:"id"`
+	LastSeenAt string `json:"last_seen_at"`
+	Presence   string `json:"presence"`
+}

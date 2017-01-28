@@ -1,6 +1,7 @@
 package peanuts
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -32,6 +33,8 @@ type query struct {
 	data        interface{}
 	method      string
 	response_ch chan response
+	json        string
+	redirect    bool
 }
 
 type response struct {
@@ -103,27 +106,55 @@ func decodeResponse(res *http.Response, data interface{}) error {
 	return nil
 }
 
-func (c *Client) execQuery(url string, form url.Values, data interface{}, method string) error {
-	req, err := http.NewRequest(
-		method,
-		url,
-		strings.NewReader(form.Encode()),
-	)
+func (c *Client) execQuery(url string, form url.Values, data interface{}, method string, jsonStr string, redirect bool) (err error) {
+	var req *http.Request
+	if jsonStr == "" {
+		req, err = http.NewRequest(
+			method,
+			url,
+			strings.NewReader(form.Encode()),
+		)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	} else {
+		req, err = http.NewRequest(
+			method,
+			url,
+			bytes.NewBuffer([]byte(jsonStr)),
+		)
+		req.Header.Set("Content-Type", "application/json")
+	}
 	if err != nil {
 		return err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	if c.Api.accessToken != "" {
 		req.Header.Set("Authorization", "Bearer "+c.Api.accessToken)
 	}
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	if redirect {
+		res, err := http.DefaultTransport.RoundTrip(req)
+		if err != nil {
+			return err
+		}
+		defer res.Body.Close()
+		if res.StatusCode == 301 || res.StatusCode == 302 || res.StatusCode == 303 || res.StatusCode == 307 {
+			if len(res.Header["Location"]) > 0 {
+				// gross
+				// must fix with reflect
+				err = json.Unmarshal([]byte("{\"data\":\""+res.Header["Location"][0]+"\"}"), data)
+				return err
+			} else {
+				return fmt.Errorf("location is not found from header")
+			}
+		} else {
+			return fmt.Errorf(strconv.Itoa(res.StatusCode))
+		}
+	}
+	res, err := c.Api.HttpClient.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer res.Body.Close()
 
-	return decodeResponse(resp, data)
+	return decodeResponse(res, data)
 }
 
 func (c *Client) throttledQuery() {
@@ -132,10 +163,12 @@ func (c *Client) throttledQuery() {
 		form := q.form
 		data := q.data
 		method := q.method
+		jsonStr := q.json
+		redirect := q.redirect
 
 		response_ch := q.response_ch
 
-		err := c.execQuery(url, form, data, method)
+		err := c.execQuery(url, form, data, method, jsonStr, redirect)
 
 		response_ch <- response{data, err}
 	}
