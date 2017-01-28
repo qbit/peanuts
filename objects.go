@@ -92,10 +92,85 @@ type Action struct {
 	EventDate    string `json:"event_date"`
 	Action       string `json:"action"`
 	Users        []User `json:"users"`
+	Objects      []Post `json:"objects"`
 }
 
 type Presence struct {
 	Id         string `json:"id"`
 	LastSeenAt string `json:"last_seen_at"`
 	Presence   string `json:"presence"`
+}
+
+type Full struct {
+	Immutable bool     `json:"immutable"`
+	You       bool     `json:"you"`
+	UserIds   []string `json:"user_ids"`
+}
+
+type Write struct {
+	*Full
+	AnyUser bool `json:"any_user"`
+}
+
+type Read struct {
+	*Write
+	Public bool `json:"publicj"`
+}
+
+type Acl struct {
+	Full  Full  `json:"full"`
+	Write Write `json:"write"`
+	Read  Read  `json:"read"`
+}
+
+type CountsOfChannel struct {
+	Messages    int `json:"messages"`
+	Subscribers int `json:"subscribers"`
+}
+
+type Channel struct {
+	CreatedAt     string          `json:"created_at"`
+	Id            string          `json:"id"`
+	Type          string          `json:"type"`
+	Owner         User            `json:"owner"`
+	Acl           Acl             `json:"acl"`
+	Counts        CountsOfChannel `json:"counts"`
+	YouSubscribed bool            `json:"you_subscribed"`
+	YouMuted      bool            `json:"you_muted"`
+	HasUnread     bool            `json:"has_unread"`
+	PaginationId  string          `json:"pagination_id"`
+}
+
+type CountsOfMessage struct {
+	Replies int `json:"replies"`
+}
+
+type ContentOfMessage struct {
+	Html     string   `json:"html"`
+	Text     string   `json:"text"`
+	Entities Entities `json:"entities"`
+}
+
+type Message struct {
+	Id           string           `json:"id"`
+	ChannelId    string           `json:"channel_id"`
+	CreatedAt    string           `json:"created_at"`
+	Source       Source           `json:"source"`
+	IsDeleted    bool             `json:"is_deleted"`
+	ThreadId     string           `json:"thread_id"`
+	User         User             `json:"user"`
+	Counts       CountsOfMessage  `json:"counts"`
+	Content      ContentOfMessage `json:"content"`
+	PaginationId string           `json:"pagination_id"`
+}
+
+type ClientInfo struct {
+	CreatedAt string `json:"created_at"`
+	CreatedBy User   `json:"created_by"`
+	Id        string `json:"id"`
+	Link      string `json:"link"`
+	Name      string `json:"name"`
+	Posts     int    `json:"posts"`
+	// this is mysterious param
+	// Content []WHAT `json:"content"`
 }

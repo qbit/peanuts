@@ -26,6 +26,26 @@ type PresenceResult struct {
 	Data Presence `json:"data"`
 }
 
+type ChannelsResult struct {
+	*CommonResponse
+	Data []Channel `json:"data"`
+}
+
+type NumberResult struct {
+	*CommonResponse
+	Data int `json:"data"`
+}
+
+type MessagesResult struct {
+	*CommonResponse
+	Data []Message `json:"data"`
+}
+
+type ClientInfosResult struct {
+	*CommonResponse
+	Data []ClientInfo `json:"data"`
+}
+
 // Get user
 // https://pnut.io/docs/resources/users/lookup#get-users-id
 func (c *Client) GetUser(id string) (result UserResult, err error) {
@@ -234,5 +254,124 @@ func (c *Client) SetPresence(presence string) (result PresenceResult, err error)
 	v.Set("presence", presence)
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: USER_API + "/me/presence", form: v, data: &result, method: "PUT", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get mentions
+// https://pnut.io/docs/resources/posts/streams#get-users-id-mentions
+func (c *Client) GetMentions(id string, count ...int) (result PostsResult, err error) {
+	v := url.Values{}
+	if len(count) > 0 {
+		v.Set("count", strconv.Itoa(count[0]))
+	}
+	param := v.Encode()
+	if param != "" {
+		param = "?" + param
+	}
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_API + "/" + id + "/mentions" + param, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get posts from id
+// https://pnut.io/docs/resources/posts/streams#get-users-id-posts
+func (c *Client) GetPostsFromUser(id string, count ...int) (result PostsResult, err error) {
+	v := url.Values{}
+	if len(count) > 0 {
+		v.Set("count", strconv.Itoa(count[0]))
+	}
+	param := v.Encode()
+	if param != "" {
+		param = "?" + param
+	}
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_API + "/" + id + "/posts" + param, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get bookmarks
+// https://pnut.io/docs/resources/posts/bookmarks#get-users-id-bookmarks
+func (c *Client) GetBookmarks(id string, count ...int) (result PostsResult, err error) {
+	v := url.Values{}
+	if len(count) > 0 {
+		v.Set("count", strconv.Itoa(count[0]))
+	}
+	param := v.Encode()
+	if param != "" {
+		param = "?" + param
+	}
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_API + "/" + id + "/bookmarks" + param, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get actions for me
+// https://pnut.io/docs/resources/posts/actions#get-posts-id-actions
+func (c *Client) GetActionsForMe(v ...url.Values) (result ActionsResult, err error) {
+	param := ""
+	if len(v) > 0 {
+		param = v[0].Encode()
+	}
+	if param != "" {
+		param = "?" + param
+	}
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_ME_API + "/actions" + param, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get channels by me
+// https://pnut.io/docs/resources/channels/lookup#get-users-me-channels
+func (c *Client) GetChannelsByMe() (result ChannelsResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_ME_API + "/channels", data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get number of unread private message
+// https://pnut.io/docs/resources/channels/lookup#get-users-me-channels-num_unread-pm
+func (c *Client) GetNumberOfUnreadPM() (result NumberResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: UNREAD_PM_NUMBER_API, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Mark read all private message
+// https://pnut.io/docs/resources/channels/lookup#delete-users-me-channels-num_unread-pm
+func (c *Client) MarkReadPM() (result NumberResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: UNREAD_PM_NUMBER_API, data: &result, method: "DELETE", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get subscribed channels
+// https://pnut.io/docs/resources/channels/subscribing#get-users-me-channels-subscribed
+func (c *Client) GetSubscribedChannels() (result ChannelsResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: SUBSCRIBED_CHANNELS_API, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get muted channels
+// https://pnut.io/docs/resources/channels/subscribing#get-users-me-channels-subscribed
+func (c *Client) GetMutedChannels() (result ChannelsResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: MUTED_CHANNELS_API, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get messages by me
+// https://pnut.io/docs/resources/messages/lookup#get-users-me-messages
+func (c *Client) GetMessagesByMe() (result MessagesResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: ME_MESSAGES_API, data: &result, method: "GET", response_ch: response_ch}
+	return result, (<-response_ch).err
+}
+
+// Get client infos
+// https://pnut.io/docs/resources/clients#get-users-id-clients
+func (c *Client) GetClients(id string) (result ClientInfosResult, err error) {
+	response_ch := make(chan response)
+	c.queryQueue <- query{url: USER_API + "/" + id + "/clients", data: &result, method: "GET", response_ch: response_ch}
 	return result, (<-response_ch).err
 }
