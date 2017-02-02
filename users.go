@@ -202,8 +202,8 @@ func (c *Client) Mute(id string) (result UserResult, err error) {
 }
 
 // Delete mute
-// https://pnut.io/docs/resources/users/presence#get-users-id-presence
-func (c *Client) UnMute(id string) (result PresenceResult, err error) {
+// https://pnut.io/docs/resources/users/muting#delete-users-id-mute
+func (c *Client) UnMute(id string) (result UserResult, err error) {
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: USER_API + "/" + id + "/mute", data: &result, method: "DELETE", response_ch: response_ch}
 	return result, (<-response_ch).err
@@ -226,8 +226,8 @@ func (c *Client) Block(id string) (result UserResult, err error) {
 }
 
 // Delete block
-// https://pnut.io/docs/resources/users/presence#get-users-id-presence
-func (c *Client) UnBlock(id string) (result PresenceResult, err error) {
+// https://pnut.io/docs/resources/posts/bookmarks#delete-posts-id-bookmark
+func (c *Client) UnBlock(id string) (result UserResult, err error) {
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: USER_API + "/" + id + "/block", data: &result, method: "DELETE", response_ch: response_ch}
 	return result, (<-response_ch).err

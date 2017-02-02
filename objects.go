@@ -164,13 +164,25 @@ type Message struct {
 	PaginationId string           `json:"pagination_id"`
 }
 
+type ContentOfClient struct {
+	*ContentOfMessage
+}
+
 type ClientInfo struct {
-	CreatedAt string `json:"created_at"`
-	CreatedBy User   `json:"created_by"`
-	Id        string `json:"id"`
-	Link      string `json:"link"`
-	Name      string `json:"name"`
-	Posts     int    `json:"posts"`
-	// this is mysterious param
-	// Content []WHAT `json:"content"`
+	CreatedAt string          `json:"created_at"`
+	CreatedBy User            `json:"created_by"`
+	Id        string          `json:"id"`
+	Link      string          `json:"link"`
+	Name      string          `json:"name"`
+	Posts     int             `json:"posts"`
+	Content   ContentOfClient `json:"content"`
+}
+
+type Marker struct {
+	Id         string `json:"id"`
+	LastReadId string `json:"last_read_id"`
+	Percentage int    `json:"percentage"`
+	UpdatedAt  string `json:"updated_at"`
+	Version    string `json:"version"`
+	Name       string `json:"name"`
 }
