@@ -21,6 +21,7 @@ const (
 	SUBSCRIBED_CHANNELS_API = ME_CHANNELS_BASE_URL + "/subscribed"
 	MUTED_CHANNELS_API      = ME_CHANNELS_BASE_URL + "/muted"
 	ME_MESSAGES_API         = USER_ME_API + "/messages"
+	CHANNEL_API             = API_BASE_URL + "channels"
 )
 
 type Api struct {

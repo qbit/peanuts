@@ -25,11 +25,6 @@ type PresenceResult struct {
 	Data Presence `json:"data"`
 }
 
-type ChannelsResult struct {
-	*CommonResponse
-	Data []Channel `json:"data"`
-}
-
 type NumberResult struct {
 	*CommonResponse
 	Data int `json:"data"`
@@ -352,7 +347,7 @@ func (c *Client) GetSubscribedChannels() (result ChannelsResult, err error) {
 }
 
 // Get muted channels
-// https://pnut.io/docs/resources/channels/subscribing#get-users-me-channels-subscribed
+// https://pnut.io/docs/resources/channels/muting#get-users-me-channels-muted
 func (c *Client) GetMutedChannels() (result ChannelsResult, err error) {
 	response_ch := make(chan response)
 	c.queryQueue <- query{url: MUTED_CHANNELS_API, data: &result, method: "GET", response_ch: response_ch}
