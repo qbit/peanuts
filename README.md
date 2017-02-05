@@ -14,22 +14,7 @@ go get github.com/yukkurisinai/peanuts
 
 ## Usage
 
-```go
-package main
-
-import (
-  "peanuts"
-)
-
-func main() {
-  client := peanuts.NewClient("CLIENT_TOKEN", "CLIENT_SECRET")
-  client.SetAccessToken("ACCESS_TOKEN")
-  v := url.Values{}
-  v.Set("text", "Hello pnut.io")
-  result, err := client.Post(v)
-  ...
-}
-```
+Plz see the [sample](https://github.com/yukkurisinai/peanuts/tree/master/sample) directory.
 
 ## Licence
 
